@@ -1,6 +1,8 @@
 const http = require('http');
 const fs = require('fs');
 
+const path = "./err404.html";
+
 
 const server = http.createServer((req,res)=>{
     if(req.url==='/'){
@@ -25,12 +27,22 @@ const server = http.createServer((req,res)=>{
         res.writeHead(404, {
             'Content-Type': 'text/html'
         });
-    
-        fs.readFile('err404.html', function(err, content){
+
+         try {
+           const content = fs.readFileSync(path, "utf8");
+           res.write(content);
+           res.end();
+         } catch (err) {
+           console.error(err);
+         }
+
+         
+        /*
+         fs.readFile('err404.html', function(err, content){
             res.write(content);
             res.end();
-        });
-    
+        }); */ 
+
     }
 }).listen(8080,()=>console.log('listenning to 8080'));
 
